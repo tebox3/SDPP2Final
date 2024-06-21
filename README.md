@@ -10,18 +10,16 @@ Para desplegar el programa se deben seguir estos pasos (windows):
 
 ---- Log Server -----
 Es necesario inicialiazr el servidor de logs con python logging_server.py para que se puedan guardar los datos.
-Pre requisitos: instalar pyro
-pip install Pyro5
+Pre requisitos:
+1. Instalar java y javac en ubuntu
 
-## Pasos para ejecutar el sistema
-1. Iniciar el servidor de nombres Pyro5:
-    python3 -m Pyro5.nameserver
-2. Ejecutar el servidor central de logs serverRMI.py:
-    python3 serverRMI.py
+## Pasos para ejecutar
+1. Iniciar: javac CentralLogServer.java && javac LogClient.java
+2. Ejecutar el servidor central: java CentralLogServer
 3. Ejecutar el cliente RMI para enviar los logs:
-    python3 cliente_rmi.py config1.json
-    python3 cliente_rmi.py config2.json
-    python3 cliente_rmi.py config3.json
+    python3 LogClient ../config1.json && 
+    python3 LogCLient ../config2.json && 
+    python3 LogClient ../config3.json 
 
 
 
