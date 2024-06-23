@@ -12,14 +12,17 @@ Para desplegar el programa se deben seguir estos pasos (windows):
 Es necesario inicialiazr el servidor de logs con python logging_server.py para que se puedan guardar los datos.
 Pre requisitos:
 1. Instalar java y javac en ubuntu
+2. Instalar pandas y maplotlib "pip install pandas matplotlib"
+
 
 ## Pasos para ejecutar
-1. Iniciar: javac CentralLogServer.java && javac LogClient.java
+1. Iniciar: javac CentralLogServer.java LogClient.java
 2. Ejecutar el servidor central: java CentralLogServer
 3. Ejecutar el cliente RMI para enviar los logs:
-    python3 LogClient ../config1.json && 
-    python3 LogCLient ../config2.json && 
-    python3 LogClient ../config3.json 
+    python3 LogClient config1.log && 
+    python3 LogCLient config2.log && 
+    python3 LogClient config3.log ...
+
 
 
 
