@@ -6,21 +6,22 @@ import java.rmi.registry.Registry;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.Date;
 
 interface CentralLogServerInterface extends Remote {
-    String logEvent(String eventType, String juego, String action, String[] args) throws RemoteException;
+    String logEvent(String timestamp,String eventType, String juego, String action, String[] args) throws RemoteException;
 }
 
 public class CentralLogServer extends UnicastRemoteObject implements CentralLogServerInterface {
-    private static final String LOG_FILE = "centralized_log.log";
+    private static final String LOG_FILE = "logCentralizado.log";
 
     protected CentralLogServer() throws RemoteException {
         super();
     }
 
-    public String logEvent(String eventType, String juego, String action, String[] args) throws RemoteException {
+    public String logEvent(String timestamp,String eventType, String juego, String action, String[] args) throws RemoteException {
         try (FileWriter writer = new FileWriter(LOG_FILE, true)) {
-            long timestamp = Instant.now().getEpochSecond();
+            //long timestamp = Instant.now().getEpochSecond();
             String logMessage = timestamp + ", " + eventType + ", " + juego + ", " + action;
             for (String arg : args) {
                 logMessage += ", " + arg;
@@ -36,7 +37,7 @@ public class CentralLogServer extends UnicastRemoteObject implements CentralLogS
     public static void main(String[] args) {
         try {
             CentralLogServer server = new CentralLogServer();
-            Registry registry = LocateRegistry.createRegistry(1099);
+            Registry registry = LocateRegistry.createRegistry(1099); // el servidor esta corriendo en el puerto 1099
             registry.bind("CentralLogServer", server);
             System.out.println("Central Log Server is ready.");
         } catch (Exception e) {

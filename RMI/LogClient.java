@@ -1,9 +1,11 @@
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.sql.Date;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.IOException;
 import java.util.List;
+
 
 public class LogClient {
     private LogClient() {}
@@ -13,9 +15,8 @@ public class LogClient {
             System.err.println("Usage: java LogClient <config-file>");
             System.exit(1);
         }
-
-        String configFilePath = args[0];
-        String logFilePath = configFilePath.replace(".json", ".log");
+        //Se le da el nombre del archivo .log como argumento
+        String logFilePath = args[0];
 
         // Verificar si el archivo de log existe
         if (!Files.exists(Paths.get(logFilePath))) {
@@ -48,7 +49,7 @@ public class LogClient {
                 String[] argsLog = new String[parts.length - 4];
                 System.arraycopy(parts, 4, argsLog, 0, parts.length - 4);
                 try {
-                    String response = server.logEvent(eventType, juego, action, argsLog);
+                    String response = server.logEvent(timestamp,eventType, juego, action, argsLog);
                     System.out.println(response);
                 } catch (Exception e) {
                     System.err.println("Error logging event: " + e.getMessage());

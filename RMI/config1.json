@@ -1,0 +1,6 @@
+{
+    "serverHost": "localhost",
+    "serverPort": 1099,
+    "logFilePath": "config1.log",
+    "clientPort": 4004
+}

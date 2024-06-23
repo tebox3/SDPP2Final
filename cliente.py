@@ -25,7 +25,7 @@ def cargar_configuracion():
 
 def setup_logging(config_file):
     # Configura el logging para cada archivo de configuración
-    log_filename = config_file.replace('.json', '.log')
+    log_filename = os.path.join('RMI', config_file.replace('.json', '.log'))
     logging.basicConfig(filename=log_filename, 
                         filemode='w', 
                         level=logging.INFO,
@@ -82,8 +82,8 @@ def get_teams():
     return response.json()
 
 def log_event(event_type, action, *args):
-    timestamp = int(time.time())
-    log_message = f'{timestamp}, {event_type}, {juego}, {action}, ' + ', '.join(map(str, args))
+    #timestamp = int(time.time())
+    log_message = f'{event_type}, {juego}, {action}, ' + ', '.join(map(str, args))
     logging.info(log_message)
 
 def inicio():
