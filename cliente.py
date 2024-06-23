@@ -83,14 +83,24 @@ def get_teams():
 
 def log_event(event_type, action, *args):
     #timestamp = int(time.time())
-    log_message = f'{event_type}, {juego}, {action}, ' + ', '.join(map(str, args))
+    print("Juego2: ",juego)
+    log_message = f'{event_type}, juego{juego}, {action}, ' + ', '.join(map(str, args))
     logging.info(log_message)
+
+def get_game():
+    url = f'{SERVER_URL}/game'
+    response = requests.get(url)
+    data = response.json()
+    juego = data.get('juego')
+    print("Juego1: ",juego)
+    return juego
 
 def inicio():
     global configuracion, board
     global TEAM_NAME
     global PLAYER_NAME
     global juego
+    juego = get_game()
     log_event('ini', 'inicio-juego')
     teams = get_teams()
     log_event('ini', 'crea-jugador', TEAM_NAME, PLAYER_NAME)

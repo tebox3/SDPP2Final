@@ -8,7 +8,7 @@ from itertools import cycle, zip_longest
 import os
 
 app = Flask(__name__)
-
+first_time = True
 teams = {}
 teams['Team A'] = []
 teams['Team B'] = []
@@ -29,6 +29,10 @@ teams_roll['Team A'] = []
 teams_roll['Team B'] = []
 winner = ''
 
+juego = ''
+
+
+
 # Función para leer el valor de 'juego' desde un archivo
 def read_juego_value(filename='juego_value.txt'):
     if os.path.exists(filename):
@@ -41,7 +45,6 @@ def read_juego_value(filename='juego_value.txt'):
 def write_juego_value(value, filename='juego_value.txt'):
     with open(filename, 'w') as file:
         file.write(str(value))
-
 
 def intercalate_teams(teams):
     # Obtener una lista con los nombres de los equipos
@@ -114,6 +117,25 @@ def start_rolling(teams):
     print("Game finished!, thanks for playing")
     mensajito = send_message_to_all_players_ended(players,'game_ended', 'Gracias por jugar',winner)
 
+
+@app.route("/game", methods=['GET'])
+def send_game():
+    global first_time
+    global juego
+    if first_time:
+        # Leer el valor actual de 'juego' desde el archivo
+        juego = read_juego_value()
+        print("JUEGO:: ", juego)
+        # Incrementar el valor de 'juego'
+        juego += 1
+        print("JUEGO:: ", juego)
+        # Guardar el nuevo valor de 'juego' en el archivo
+        write_juego_value(juego)
+        print("JUEGO:: ", juego)
+        first_time=False
+    return jsonify({'juego':juego})
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -135,15 +157,6 @@ def get_teams():
 
 @app.route('/join_team', methods=['POST'])
 def join_team():
-    # Leer el valor actual de 'juego' desde el archivo
-    juego = read_juego_value()
-
-    # Incrementar el valor de 'juego'
-    juego += 1
-
-    # Guardar el nuevo valor de 'juego' en el archivo
-    write_juego_value(juego)
-    print("Numero de JUEGO: ",juego)
     #agregar un jugador al equipo deseado
     team_name = request.json['team_name']
     player_name = request.json['player_name']
