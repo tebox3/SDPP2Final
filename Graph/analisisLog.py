@@ -19,6 +19,44 @@ with open(log_file, 'r') as file:
 teams = {}
 teams_4 = {}
 teams_5 = {}
+data = []
+
+for line in log_contents:
+        parts = line.strip().split(', ')
+        timestamp = datetime.strptime(parts[0], '%Y-%m-%d %H:%M:%S')
+        event_type = parts[1]
+        juego = parts[2]
+        action = parts[3]
+        args = parts[4:]
+        data.append([timestamp, event_type, juego, action] + args)
+
+columns = ['timestamp', 'event_type', 'juego', 'action', 'arg1', 'arg2', 'arg3']
+df = pd.DataFrame(data, columns=columns)
+
+# Filtrar las acciones iniciadas
+df_ini = df[df['event_type'] == 'ini']
+
+# Gráfico 1: Jugadores creados por equipo en un juego
+created_players = df_ini[df_ini['action'] == 'crea-jugador'].groupby('arg1').size()
+created_players.plot(kind='bar', title='Jugadores creados por equipo')
+plt.xlabel('Equipo')
+plt.ylabel('Número de jugadores')
+print("Imprime Grafico 1")
+plt.show()
+
+# Gráfico 2: Jugadas realizadas por jugador en un juego
+player_actions = df_ini[df_ini['action'].str.contains('lanza-dado')].groupby('arg2').size()
+player_actions.plot(kind='bar', title='Jugadas realizadas por jugador')
+plt.xlabel('Jugador')
+plt.ylabel('Número de jugadas')
+print("Imprime Grafico 2")
+plt.show()
+
+
+
+
+
+
 
 # Procesar el archivo de registro
 for line in log_contents:
