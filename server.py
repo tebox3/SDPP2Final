@@ -10,8 +10,8 @@ import os
 app = Flask(__name__)
 first_time = True
 teams = {}
-teams['Team A'] = []
-teams['Team B'] = []
+
+
 max_player = 3
 max_teams = 3
 """ teams['Team A'] = ['pancho', 'seba']
@@ -144,6 +144,7 @@ def index():
 @app.route('/register_team', methods=['POST'])
 def register_team():
     team_name = request.json['team_name']
+    print(teams)
     if len(teams)<3:
         teams[team_name] = []
         print(team_name," registered.")
@@ -153,7 +154,7 @@ def register_team():
 
 @app.route('/get_teams', methods=['GET'])
 def get_teams():
-    return jsonify(teams)
+    return jsonify({'teams':teams})
 
 @app.route('/join_team', methods=['POST'])
 def join_team():
@@ -188,6 +189,11 @@ def start_game():
         return jsonify({'error': 'every team need at least 1 player, wait.'}), 400
     if game_started:
         return jsonify({'error': 'Game has already started.'}), 400
+    if len(teams)<2:
+        print("Faltan equipos.")
+        print(teams)
+        return jsonify({'error': 'Faltan equipos'}), 400
+    print("Verificacion de teams: ",teams)
     game_started = True
     thread = Thread(target=execute_function)
     thread.start()

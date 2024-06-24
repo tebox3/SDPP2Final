@@ -43,12 +43,14 @@ setup_logging(configuracion['ruta_archivo'])
 teams = {}
 
 def register_team(team_name):
+    log_event('ini', 'crea-equipo', TEAM_NAME, PLAYER_NAME)
     url = f'{SERVER_URL}/register_team'
     data = {'team_name': team_name}
     response = requests.post(url, json=data)
     response2 = response.json()
     if response2['message'] == 'Limit of teams reached':
         print("ERROR, limit of teams reached, just join a team.")
+    log_event('fin', 'crea-equipo', TEAM_NAME, PLAYER_NAME)
     return response.json()
 
 def join_team(team_name, player_name):
@@ -79,7 +81,9 @@ def game_status():
 def get_teams():
     url = f'{SERVER_URL}/get_teams'
     response = requests.get(url)
-    return response.json()
+    data = response.json()
+    teams = data.get('teams')
+    return teams
 
 def log_event(event_type, action, *args):
     #timestamp = int(time.time())
@@ -103,6 +107,11 @@ def inicio():
     juego = get_game()
     log_event('ini', 'inicio-juego')
     teams = get_teams()
+    if TEAM_NAME not in teams:
+        register_team(TEAM_NAME)
+        print("Team ",TEAM_NAME," registrado correctamente.")
+    else:
+        print("Su equipo ya esta creado.")
     log_event('ini', 'crea-jugador', TEAM_NAME, PLAYER_NAME)
     message_join = join_team(TEAM_NAME, PLAYER_NAME)
     log_event('fin', 'crea-jugador', TEAM_NAME, PLAYER_NAME)

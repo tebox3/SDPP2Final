@@ -32,7 +32,7 @@ public class LogClient {
             CentralLogServerInterface server = (CentralLogServerInterface) registry.lookup("CentralLogServer");
 
             for (String log : lines) {
-                // Ignorar líneas vacías y líneas de log de servidor Flask
+                // Ignorar líneas vacías y líneas de log de servidor
                 if (log.trim().isEmpty() || log.contains("WARNING:") || log.contains("Running on") || log.contains("Press CTRL+C")) {
                     continue;
                 }
@@ -49,6 +49,8 @@ public class LogClient {
                 String[] argsLog = new String[parts.length - 4];
                 System.arraycopy(parts, 4, argsLog, 0, parts.length - 4);
                 try {
+                    System.out.println("Aqui vieneee:::::");
+                    System.out.println(timestamp + ", " + eventType + ", " + juego + ", " + action);
                     String response = server.logEvent(timestamp,eventType, juego, action, argsLog);
                     System.out.println(response);
                 } catch (Exception e) {
